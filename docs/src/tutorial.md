@@ -73,9 +73,11 @@ In addition, by providing keywords to `step!`, it is also possible to collect an
 Agents.step!
 ```
 
----
+Notice that besides `step!`, there is also the [`paramscan`](@ref) function that performs data collection:
 
-Notice that besides `step!`, there is also the [`paramscan`](@ref) function that performs data collection, see below.
+```@docs
+Agents.paramscan
+```
 
 ## Example: Schelling's segregation model
 
@@ -121,10 +123,16 @@ We also want to include a property `min_to_be_happy` in our model, and so we hav
 
 ```@example schelling
 properties = Dict(:min_to_be_happy => 3)
-schelling = ABM(SchellingAgent, space; properties = properties)
+schelling = ABM(SchellingAgent, space;
+    scheduler = fastest, properties = properties)
 ```
 
-Here we used the default scheduler.
+Here we used the default scheduler (which is also the fastest one) to create the model. We could instead try to activate the agents according to their property `:group`, so that all agents of group 1 act first. We would then use the scheduler [`property_activation`](@ref) like so:
+```@example schelling
+schelling2 = ABM(SchellingAgent, space;
+    properties = properties, scheduler = partial_activation(:group))
+```
+Notice that `partial_activation` accepts an argument and returns a function, which is why we didn't just give `partial_activation` to `scheduler`.
 
 ### Creating the ABM through a function
 
@@ -282,11 +290,8 @@ data = step!(model, agent_step!, 2, properties,
 ### Scanning parameter ranges
 
 We often are interested in the effect of different parameters on the behavior of an
-agent-based model. `Agents.jl` provides a function `paramscan` to automatically explore
-the effect of different parameter values:
-```@docs
-paramscan
-```
+agent-based model. `Agents.jl` provides the function [`paramscan`](@ref) to automatically explore
+the effect of different parameter values.
 
 We have already defined our model initialization function as `initialize`.
 We now also define a processing function, that returns the percentage of

@@ -1,5 +1,7 @@
 # API
 
+The core API is defined by [`AgentBasedModel`](@ref), [`Space`](@ref), [`AbstractAgent`](@ref) and [`step!`](@ref), which are described in the [Tutorial page](@ref). The functionality described here builds on top of the core API.
+
 ## Model and space information
 ```@docs
 nv(::ABM)
@@ -39,10 +41,16 @@ nodes
 ```
 
 ## Schedulers
+The schedulers of Agents.jl have a very simple interface. All schedulers are functions,
+that take as an input the ABM and return an iterator over agent IDs.
+Notice that this iterator can be a "true" iterator or can be just a standard vector of IDs.
+You can define your own scheduler according to this API and use it when making an [`AgentBasedModel`](@ref).
 ```@docs
-as_added
+fastest
+by_id
 random_activation
 partial_activation
+property_activation
 ```
 
 ## Utilities
